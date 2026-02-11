@@ -1,82 +1,237 @@
 <template>
     <div class="nav-top">
-        <div class="nav-label">我的文稿</div>
-        <div class="spaces"><MIcon name="folder"/></div>
+        <div class="nav-label">{{ nowSpace == "def" ? "我的文稿" : nowSpaceDt.name }}</div>
+        <div class="spaces" @click="showWork=true"><MIcon name="folder" /></div>
     </div>
+    
     <ul class="text-list">
-        <li>
+        <li @click="startCreating">
+            <div class="title"><MIcon name="add" /> 新建文稿</div>
+        </li>
+
+        <li v-if="isCreating" class="renameing">
             <div class="title">
-                <MIcon name="add"/> 新建文稿
+                <input ref="inputRef" v-model="newTitle" class="title-input" @keyup.enter="confirmCreate" @blur="confirmCreate" />
             </div>
         </li>
-        <li v-for="text in textList" :key="text.id">
-            <div class="title">{{ text.title }}</div>
+
+        <li v-for="text in textList" :key="text.id" 
+            :class="{ active: selectedId === text.id,renameing:renamingId===text.id }"
+            @click="$emit('open',text.id);handleSelect(text.id)"
+            @contextmenu.prevent="onContextMenu($event, text)">
+            
+            <div v-if="renamingId === text.id" class="title">
+                <input :ref="(el) => { if (el) renameInputRef = el as HTMLInputElement }" v-model="renameTitle" class="title-input" @keyup.enter="confirmRename" @blur="confirmRename" />
+            </div>
+            <div v-else class="title">{{ text.title || '无标题' }}</div>
         </li>
     </ul>
+
+    <Menu v-model:show="menuShow" :items="menuItems" :style="menuStyle" />
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, watch, onMounted, nextTick, computed } from 'vue';
 import MIcon from '../util/MIcon.vue';
-interface TextHead {
-    title: string;
-    id: string;
-}
+import Menu from '../util/Menu.vue'; // 确保路径正确
+import { NoteCore, type TextMeta, type TextSpace } from '../core';
+import type { MenuItem } from '../core/types';
+import { nowSpace, selectedId, showWork } from '../core/store';
+import bus from '../core/bus';
 
-const textList = ref<TextHead[]>([]);
+defineEmits(["open"])
+// ... 原有的 ref 定义 ...
+const nowSpaceDt = ref<TextSpace>({ name: "", id: "def" });
+const textList = ref<TextMeta[]>([]);
+bus.on("renameNowSpace",async ()=>{
+    nowSpaceDt.value=(await NoteCore.getSpaceDetail(nowSpace.value)) as TextSpace;
+})
+
+// 菜单相关状态
+const menuShow = ref(false);
+const menuPos = ref({ x: 0, y: 0 });
+const currentActiveText = ref<TextMeta | null>(null);
+
+// 重命名相关状态
+const renamingId = ref('');
+const renameTitle = ref('');
+const renameInputRef = ref<HTMLInputElement | null>(null);
+
+// --- 核心逻辑 ---
+
+const loadTextList = async () => {
+    nowSpaceDt.value = (await NoteCore.getSpaceDetail(nowSpace.value)) as TextSpace;
+    textList.value = await NoteCore.getNoteMetas(nowSpace.value);
+};
+
+// 右键菜单内容
+const menuItems = computed<(MenuItem | undefined)[]>(() => [
+    {
+        title: '重命名',
+        icon: 'pencil',
+        click: () => startRename()
+    },
+    {
+        title: '删除',
+        icon: 'delete',
+        click: () => handleDelete()
+    }
+]);
+
+const menuStyle = computed(() => ({
+    left: `${menuPos.value.x}px`,
+    top: `${menuPos.value.y}px`,
+}));
+
+// 触发右键菜单
+const onContextMenu = (e: MouseEvent, text: TextMeta) => {
+    currentActiveText.value = text;
+    menuPos.value = { x: e.clientX, y: e.clientY };
+    menuShow.value = true;
+};
+
+// --- 操作函数 ---
+
+const startRename = async () => {
+    if (!currentActiveText.value) return;
+    renamingId.value = currentActiveText.value.id;
+    renameTitle.value = currentActiveText.value.title;
+    await nextTick();
+    renameInputRef.value?.focus();
+};
+
+const confirmRename = async () => {
+    if (!renamingId.value) return;
+    const newName = renameTitle.value.trim();
+    if(!newName){
+        // TODO : show toast
+    }
+    if (newName && currentActiveText.value && newName !== currentActiveText.value.title) {
+        await NoteCore.updateNote(nowSpace.value, renamingId.value, { title: newName });
+        await loadTextList();
+    }
+    renamingId.value = '';
+};
+
+const handleDelete = async () => {
+    if (!currentActiveText.value) return;
+    // 这里可以加个 confirm 询问，但为了简明直接删啦
+    await NoteCore.deleteNote(nowSpace.value, currentActiveText.value.id);
+    await loadTextList();
+};
+
+// 新建状态管理
+const isCreating = ref(false);
+const newTitle = ref("");
+const inputRef = ref<HTMLInputElement | null>(null);
+
+// 开启新建模式
+const startCreating = async () => {
+    isCreating.value = true;
+    newTitle.value = "";
+    // 等待 DOM 渲染后自动聚焦
+    await nextTick();
+    inputRef.value?.focus();
+};
+
+// 确认创建逻辑
+const confirmCreate = async () => {
+    if (!isCreating.value) return; // 防止 blur 和 enter 重复触发
+
+    const title = newTitle.value.trim();
+    if (title) {
+        const nt=await NoteCore.createNote(nowSpace.value, title, "");
+        await loadTextList();
+        selectedId.value=nt.id;
+    }
+    
+    // 重置状态
+    isCreating.value = false;
+    newTitle.value = "";
+};
+
+const handleSelect = (id: string) => {
+    selectedId.value = id;
+};
+
+watch(nowSpace, () => loadTextList());
+onMounted(() => loadTextList());
 </script>
 
 <style lang="scss">
-.nav-top{
+.title-input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: #494e59;
+    padding: 0;
+    margin: 0;
+
+    &::placeholder {
+        color: #ccc;
+    }
+}
+.nav-top {
     padding: 0 20px;
     padding-top: 20px;
-    overflow:hidden;
+    overflow: hidden;
+
     .nav-label {
         font-size: 12px;
         line-height: 20px;
         color: #888;
-        float:left;
+        float: left;
     }
-    .spaces{
+
+    .spaces {
         width: 20px;
         height: 20px;
         float: right;
         border-radius: 4px;
         cursor: pointer;
-        .m-icon{
+
+        .m-icon {
             width: 16px;
             height: 16px;
             margin: 2px;
         }
+
         &:hover{
-            background-color:rgb(244, 246, 248);
+            background-color: rgb(206, 230, 255);
         }
     }
 }
 
 
-.text-list{
+.text-list {
     margin: 10px 20px;
     list-style: none;
     height: calc(100% - 250px);
     overflow-y: auto;
     overflow-x: hidden;
     user-select: none;
-    li{
+
+    li {
         width: 100%;
-        margin:0 4px;
+        margin: 0 4px;
         border-radius: 4px;
         height: 36px;
         color: #494e59;
         transition: all .2s;
         cursor: pointer;
-        &:hover{
-            background-color: rgb(244, 246, 248);
+
+        &:hover,&.renameing{
+            background-color: rgb(206, 230, 255);
         }
         &.active{
-            background-color: rgb(246, 248, 250);
+            background-color: rgb(118, 187, 255);
+            color:#fff;
         }
-        .title{
+
+        .title {
             line-height: 36px;
             white-space: nowrap;
             overflow: hidden;
@@ -85,10 +240,11 @@ const textList = ref<TextHead[]>([]);
             font-size: 14px;
             padding: 0 10px;
         }
-        .m-icon{
-            display: inline-block;
-            width: 1em;
-            height: 1em;
+
+        .m-icon {
+            float: left;
+            width: 1.5em;
+            height: 36px;
             padding-right: .5em;
         }
     }

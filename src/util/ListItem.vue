@@ -1,5 +1,5 @@
 <template>
-    <div class="list-item" :class="{active}" :title="title">
+    <div class="nav-list-item" :class="{active}" :title="title">
         <MIcon :name="icon" />
         <div class="title">{{ title }}</div>
     </div>
@@ -25,7 +25,7 @@ const props=defineProps({
 </script>
 
 <style lang="scss">
-.list-item{
+.nav-list-item{
     width: calc(100% - 20px);
     margin: 10px;
     border-radius: 5px;
@@ -47,10 +47,11 @@ const props=defineProps({
         width: calc(100% - 40px);
     }
     &:hover{
-        background-color: rgb(244, 246, 248);
+        background-color: rgb(206, 230, 255);
     }
     &.active{
-        background-color: rgb(246, 248, 250);
+        background-color: rgb(118, 187, 255);
+        color:#fff;
     }
 }
 </style>

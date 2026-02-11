@@ -1,0 +1,72 @@
+@import url(https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap);
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    font-family: 'Inter','Noto Sans SC','Noto Sans JP',sans-serif;
+    background-color: #fff;
+}
+
+.milkdown {
+  --crepe-color-background: #ffffff;
+  --crepe-color-on-background: #1b1c1d;
+  --crepe-color-surface: #f8f9ff;
+  --crepe-color-surface-low: #f2f3fa;
+  --crepe-color-on-surface: #191c20;
+  --crepe-color-on-surface-variant: #43474e;
+  --crepe-color-outline: #73777f;
+  --crepe-color-primary: #37618e;
+  --crepe-color-secondary: #d7e3f8;
+  --crepe-color-on-secondary: #101c2b;
+  --crepe-color-inverse: #2e3135;
+  --crepe-color-on-inverse: #eff0f7;
+  --crepe-color-inline-code: #ba1a1a;
+  --crepe-color-error: #ba1a1a;
+  --crepe-color-hover: #eceef4;
+  --crepe-color-selected: #e1e2e8;
+  --crepe-color-inline-area: #d8dae0;
+
+  --crepe-font-title: inherit;
+  --crepe-font-default: inherit;
+  --crepe-font-code:Consolas,sans-serif,monospace;
+
+  --crepe-shadow-1:
+    0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+  --crepe-shadow-2:
+    0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+
+    p{
+        margin: .3em 0;
+    }
+    .ProseMirror blockquote{
+        padding: .2em 0;
+        padding-left: 40px;
+        color: #666;
+    }
+    .ProseMirror{
+        padding: 30px 120px;
+    }
+    .milkdown-table-block {
+        th,td{
+            border:var(--crepe-color-outline) 1px solid;
+        }
+    }
+}
+
+.cm-editor *{
+    font-family:var(--crepe-font-code)!important;
+}
+
+.crepe-placeholder{
+    opacity: .5;
+}
+
+.ͼ3 .cm-selectionBackground{
+    background-color: #aaa;
+}
+
+.ͼ3.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {background: #aaa;}

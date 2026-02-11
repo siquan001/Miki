@@ -1,18 +1,39 @@
 <template>
-    <div class="app-left">
-        <Logo />
+    <div class="app-left" :style="{ width: leftWidth + 'px' }">
+        <Logo @click="selectedId='';showTab=0" />
 
-        <ListItem icon="diary" title="日记"/>
-        <ListItem icon="text" title="随笔"/>
+        <ListItem icon="diary" title="日记" :active="showTab==3" @click="selectedId='';showTab=3" />
+        <ListItem icon="text" title="随笔" />
 
-        <TextList/>
+        <TextList @open="showTab = 1" />
     </div>
-    <div class="app-right">
-        <Nav/>
-        <MilkdownProvider>
-            <Editor/>
-        </MilkdownProvider>
+    <div class="app-fg" :style="{ left: (leftWidth - 2) + 'px' }" @mousedown="startResize"></div>
+    <div class="app-right" :style="{ width: 'calc(100% - ' + leftWidth + 'px)' }">
+        <Nav @setting="showTab = 2" />
+        <div class="app-tabs">
+            <div class="tab initial" :style="{ display: showTab == 0 ? 'flex' : 'none' }">
+                <Logo />
+                <ul class="initlist">
+                    <ListItem icon="help" title="帮助" />
+                    <ListItem icon="add" title="新建文档" />
+                    <ListItem icon="pencil" title="随便记记" />
+                </ul>
+            </div>
+            <div class="tab ap-editor" :style="{ display: showTab == 1 ? 'block' : 'none' }">
+                <MilkdownProvider>
+                    <Editor :key="selectedId" :id="selectedId"/>
+                </MilkdownProvider>
+            </div>
+            <div class="tab setting" :style="{ display: showTab == 2 ? 'block' : 'none' }">
+                <Setting />
+            </div>
+            <div class="tab ap-diary" :style="{ display: showTab == 3 ? 'block' : 'none' }">
+                <Diary v-if="showTab==3"/>
+            </div>
+        </div>
     </div>
+    <Workspaces v-model:show="showWork" v-model:model-value="nowSpace"/>
+    <div class="co"></div>
 </template>
 
 <script setup lang="ts">
@@ -22,24 +43,139 @@ import Nav from './parts/Nav.vue';
 import TextList from './parts/TextList.vue';
 import ListItem from './util/ListItem.vue';
 import Editor from './parts/Editor.vue';
+import { onMounted, ref } from 'vue';
+import Setting from './parts/Setting.vue';
+import bus from './core/bus';
+import { nowSpace, selectedId, showTab, showWork } from './core/store';
+import Workspaces from './parts/Workspaces.vue';
+import Diary from './parts/Diary.vue';
 
+let stolw = localStorage.getItem('kd');
+const leftWidth = ref(stolw ? parseFloat(stolw) : 300); // 新增：控制左侧宽度
+
+const startResize = (e: MouseEvent) => {
+    // 阻止默认行为和选择文字
+    e.preventDefault();
+
+    const startX = e.clientX;
+    const startWidth = leftWidth.value;
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+        // 计算新宽度，可以根据需要设置 min/max 限制
+        const newWidth = startWidth + (moveEvent.clientX - startX);
+        if (leftWidth.value == 0) {
+            if (newWidth > 100) {
+                leftWidth.value = 200;
+            }
+        } else {
+            if (newWidth < 100) {
+                leftWidth.value = 0;
+            } else
+                if (newWidth > 200 && newWidth < window.innerWidth * 0.5) { // 限制拖动范围
+                    leftWidth.value = newWidth;
+                }
+        }
+
+    };
+
+    const onMouseUp = () => {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+        localStorage.setItem("kd", leftWidth.value.toString());
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+};
+
+onMounted(() => {
+    document.addEventListener("click", () => {
+        bus.emit("doc-click");
+    })
+})
 </script>
 
 <style lang="scss">
-.app-left{
+.app-left {
     width: 300px;
     height: 100vh;
-    background-color: rgb(236,239,244);
+    background-color: rgb(228, 237, 255);
     position: absolute;
-    top:0;
-    left:0;
+    top: 0;
+    left: 0;
 }
 
-.app-right{
+.app-fg {
+    width: 4px;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    // left: 298px;
+    z-index: 99;
+    cursor: ew-resize;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.1); // 增加悬浮提示
+    }
+}
+
+.app-right {
     width: calc(100% - 300px);
     height: 100vh;
     position: absolute;
-    top:0;
-    right:0;
+    top: 0;
+    right: 0;
+    background-color: #fff;
+    overflow: hidden;
+
+    .app-tabs {
+        width: 100%;
+        height: calc(100% - 36px);
+
+        .tab {
+            display: none;
+            height: 100%;
+
+            &.initial {
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+
+                .logo {
+                    font-size: 80px;
+                    color: #ccc;
+                }
+
+                .initlist {
+                    margin: 60px 0;
+                    margin-bottom: 40px;
+                    width: 300px;
+
+                    .nav-list-item {
+                        margin: 5px 0;
+                        color: #bbb;
+                        background-color: #f9f9f9;
+
+                        &:hover {
+                            background-color: #eee;
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+.co {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    /*background-color: #000;*/
+    opacity: .04;
+    pointer-events: none;
 }
 </style>
