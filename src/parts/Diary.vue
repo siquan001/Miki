@@ -6,6 +6,7 @@ import { NoteCore,type DiaryMeta } from '../core';
 import { MilkdownProvider } from '@milkdown/vue';
 import { nowDiaryDate } from '../core/store';
 import bus from '../core/bus';
+import DiaryPicker from './DiaryPicker.vue';
 const label = ref("");
 const id=computed(()=>{
     return NoteCore.getDiaryId(nowDiaryDate.value);
@@ -52,6 +53,15 @@ async function nextDiary(){
 
 bus.on("diary-last",lastDiary);
 bus.on("diary-next",nextDiary);
+
+const showPicker=ref(false);
+bus.on("showpicker",()=>{
+    showPicker.value=true;
+});
+const cz=ref(0);
+bus.on("diary-updated",()=>{
+    cz.value++;
+});
 </script>
 
 <template>
@@ -67,6 +77,7 @@ bus.on("diary-next",nextDiary);
                 <Editor :key="id" type="diary" :id="id" :label="label"/>
             </MilkdownProvider>
         </div>
+        <DiaryPicker v-model:show="showPicker" :key="cz"/>
     </div>
 </template>
 

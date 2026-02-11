@@ -10,7 +10,7 @@ import "@milkdown/crepe/theme/common/style.css";
 import { Crepe } from "@milkdown/crepe";
 import { clouds } from "thememirror";
 import { onBeforeUnmount } from "vue";
-import { nowSpace, selectedId } from "../core/store";
+import { nowSpace } from "../core/store";
 import { NoteCore } from "../core";
 import { switchFull } from "../core/util";
 import { replaceAll } from "@milkdown/kit/utils";
@@ -56,6 +56,7 @@ async function save(a:Crepe){
         if(!f)await NoteCore.createDiary(props.label);
         await NoteCore.updateDiary(tarId,{content,label:props.label});
         bus.emit("toast","已保存 at "+dayjs().format('YYYY/MM/DD HH:mm:ss'));
+        bus.emit("diary-updated",{id:tarId});
     } 
 }
 useEditor((root) => {

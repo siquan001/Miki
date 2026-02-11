@@ -59,7 +59,7 @@ defineEmits(["setting"]);
             <div class="nav-btn" @click="bus.emit('diary-last')" v-if="showTab==3">
                 <MIcon name="chleft"/>
             </div>
-            <div class="nav-btn" v-if="showTab==3">
+            <div class="nav-btn" @click="bus.emit('showpicker')" v-if="showTab==3">
                 <MIcon name="diary"/>
             </div>
             <div class="nav-btn" @click="bus.emit('diary-next')" v-if="showTab==3&&(!isDiaryNow)">
