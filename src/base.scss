@@ -85,6 +85,9 @@ body{
             font-size: 17px;
             text-indent: 2em;
             opacity: .9;
+            *{
+                text-indent: 0;
+            }
         }
         h1{
             font-size: 40px;
