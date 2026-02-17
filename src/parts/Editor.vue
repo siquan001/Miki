@@ -10,10 +10,11 @@ import "@milkdown/crepe/theme/common/style.css";
 import { Crepe } from "@milkdown/crepe";
 import { clouds } from "thememirror";
 import { onBeforeUnmount } from "vue";
-import { nowSpace } from "../core/store";
+import { mode, nowSpace } from "../core/store";
 import { NoteCore } from "../core";
 import { switchFull } from "../core/util";
 import { replaceAll } from "@milkdown/kit/utils";
+import {coolGlow} from 'thememirror';
 import bus from "../core/bus";
 import dayjs from "dayjs";
 function keydown(a:Crepe){
@@ -68,7 +69,7 @@ useEditor((root) => {
         defaultValue: '',
         featureConfigs: {
             "code-mirror": {
-                theme: clouds,
+                theme: mode.value=="dark"?coolGlow:clouds,
             },
             "block-edit": {
                 blockHandle: {

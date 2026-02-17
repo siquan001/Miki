@@ -72,7 +72,7 @@ export const isfullscreen=ref(false);
 export const showWork=ref(false);
 export const showTab = ref(0);
 export const nowDiaryDate=ref(dayjs());
-export const mode=ref("light");
+export const mode=ref(localStorage.getItem("miki-theme")||"light");
 export const readonlyContent=computed(()=>{
     return cts[contentId.value]||"";
 });
@@ -86,3 +86,7 @@ watch(nowSpace,()=>{
     })
 })
 
+watch(mode,(val)=>{
+    selectedId.value='';
+    localStorage.setItem("miki-theme",val);
+})
