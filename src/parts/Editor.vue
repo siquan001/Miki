@@ -45,19 +45,22 @@ const props=defineProps({
     }
 })
 const tarId=props.id;
-async function save(a:Crepe){
+async function save(a:Crepe,mode?:string){
     const content=a.getMarkdown();
     if(props.type=="note"){
         await NoteCore.updateNote(nowSpace.value,tarId,{content});
-        bus.emit("toast","已保存 at "+dayjs().format('YYYY/MM/DD HH:mm:ss'));
     }else if(props.type=="diary"){
         if(content.trim()=='')return;
         const f=await NoteCore.getDiary(NoteCore.getDiaryDate(tarId));
         if(!f)await NoteCore.createDiary(props.label);
         await NoteCore.updateDiary(tarId,{content,label:props.label});
-        bus.emit("toast","已保存 at "+dayjs().format('YYYY/MM/DD HH:mm:ss'));
         bus.emit("diary-updated",{id:tarId});
     } 
+    if(mode=="auto"){
+        bus.emit("toast","自动保存 at "+dayjs().format('YYYY/MM/DD HH:mm:ss'));
+    }else{
+        bus.emit("toast","已保存 at "+dayjs().format('YYYY/MM/DD HH:mm:ss'));
+    }
 }
 useEditor((root) => {
     const a = new Crepe({
@@ -131,19 +134,37 @@ useEditor((root) => {
             a.editor.action(replaceAll(content));
         });
         let kdf=keydown(a);
-        let tosave=()=>save(a);
+        let tosave=(mode?:string)=>save(a,mode);
+        let tostat=()=>{
+            bus.emit("toast",`字数统计：${clearTxt(a.getMarkdown()).length}字`);
+        };
         beforefn=async ()=>{
             document.removeEventListener("keydown",kdf);
             bus.off("save",tosave);
+            bus.off("stat",tostat);
             await save(a);
             bus.emit("toast","已自动保存上个文档");
             a.destroy();
         }
         document.addEventListener("keydown",kdf);
         bus.on("save",tosave);
+        bus.on("stat",tostat);
     });
     return a;
 });
+function clearTxt(md:string){
+    // clear all md syntax and html tags
+    return md.replace(/!\[.*?\]\(.*?\)/g,'') // 图片
+    .replace(/\[.*?\]\(.*?\)/g,'') // 链接
+    .replace(/`{1,3}.*?`{1,3}/gs,'') // 代码块和行内代码
+    .replace(/>\s?(.+)/g,'$1') // 引用
+    .replace(/#+\s?(.+)/g,'$1') // 标题
+    .replace(/[-*+]\s?(.+)/g,'$1') // 无序列表
+    .replace(/\d+\.\s?(.+)/g,'$1') // 有序列表
+    .replace(/<[^>]+>/g,'') // HTML标签
+    .replace(/\n+/g,'\n') // 多余换行
+    .trim();
+}
 let beforefn=async ()=>{};
 onBeforeUnmount(async ()=>{
     await beforefn();

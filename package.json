@@ -1,7 +1,7 @@
 {
   "name": "miki",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -17,6 +17,7 @@
     "@milkdown/vue": "^7.18.0",
     "@popperjs/core": "^2.11.8",
     "dayjs": "^1.11.19",
+    "jszip": "^3.10.1",
     "localforage": "^1.10.0",
     "scss": "^0.2.4",
     "thememirror": "^2.0.1",

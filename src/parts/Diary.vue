@@ -100,7 +100,7 @@ bus.on("diary-updated",()=>{
         font-size: 24px;
         font-weight: bold;
         float: left;
-        color: #aaa;
+        color:var(--mi-color);
         line-height: 30px;
     }
 

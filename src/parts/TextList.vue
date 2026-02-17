@@ -2,6 +2,7 @@
     <div class="nav-top">
         <div class="nav-label">{{ nowSpace == "def" ? "我的文稿" : nowSpaceDt.name }}</div>
         <div class="spaces" @click="showWork=true"><MIcon name="folder" /></div>
+        <div class="upload-md" @click="upFileText()"><MIcon name="upload" /></div>
     </div>
     
     <ul class="text-list">
@@ -36,8 +37,10 @@ import MIcon from '../util/MIcon.vue';
 import Menu from '../util/Menu.vue'; // 确保路径正确
 import { NoteCore, type TextMeta, type TextSpace } from '../core';
 import type { MenuItem } from '../core/types';
-import { nowSpace, selectedId, showWork } from '../core/store';
+import { nowSpace, selectedId, showTab, showWork } from '../core/store';
 import bus from '../core/bus';
+import { upFileText } from '../core/export';
+import { download } from '../core/util';
 
 defineEmits(["open"])
 // ... 原有的 ref 定义 ...
@@ -45,6 +48,9 @@ const nowSpaceDt = ref<TextSpace>({ name: "", id: "def" });
 const textList = ref<TextMeta[]>([]);
 bus.on("renameNowSpace",async ()=>{
     nowSpaceDt.value=(await NoteCore.getSpaceDetail(nowSpace.value)) as TextSpace;
+})
+bus.on("refreshList",async ()=>{
+    textList.value=await NoteCore.getNoteMetas(nowSpace.value);
 })
 
 // 菜单相关状态
@@ -75,6 +81,23 @@ const menuItems = computed<(MenuItem | undefined)[]>(() => [
         title: '删除',
         icon: 'delete',
         click: () => handleDelete()
+    },
+    {
+        title: '导出为.md',
+        icon: 'md',
+        click: () => {
+            if(currentActiveText.value){
+                let bid=currentActiveText.value.id;
+                NoteCore.getContent(bid).then(content=>{
+                    NoteCore.getNoteMetas(nowSpace.value).then(metas=>{
+                        let meta=metas.find(m=>m.id==bid);
+                        if(meta){
+                            download(`${meta.title}.md`,content||"");
+                        }
+                    })
+                }) 
+            }
+        }
     }
 ]);
 
@@ -115,9 +138,13 @@ const confirmRename = async () => {
 
 const handleDelete = async () => {
     if (!currentActiveText.value) return;
-    // 这里可以加个 confirm 询问，但为了简明直接删啦
+
     await NoteCore.deleteNote(nowSpace.value, currentActiveText.value.id);
     await loadTextList();
+    if(selectedId.value===currentActiveText.value.id){
+        selectedId.value="";
+        showTab.value=0;
+    }
 };
 
 // 新建状态管理
@@ -134,15 +161,18 @@ const startCreating = async () => {
     inputRef.value?.focus();
 };
 
+const DefContent=`# Miki\n\n> 海内存知己，天涯若比邻。\n\n千里之行，始于足下，从这里开始你的创作吧！`;
+
 // 确认创建逻辑
 const confirmCreate = async () => {
     if (!isCreating.value) return; // 防止 blur 和 enter 重复触发
 
     const title = newTitle.value.trim();
     if (title) {
-        const nt=await NoteCore.createNote(nowSpace.value, title, "");
+        const nt=await NoteCore.createNote(nowSpace.value, title, DefContent);
         await loadTextList();
         selectedId.value=nt.id;
+        showTab.value=1;
     }
     
     // 重置状态
@@ -166,7 +196,7 @@ onMounted(() => loadTextList());
     border: none;
     outline: none;
     font-size: 14px;
-    color: #494e59;
+    color: var(--mi-color);
     padding: 0;
     margin: 0;
 
@@ -182,16 +212,17 @@ onMounted(() => loadTextList());
     .nav-label {
         font-size: 12px;
         line-height: 20px;
-        color: #888;
+        color: var(--mi-color-label);
         float: left;
     }
 
-    .spaces {
+    .spaces,.upload-md {
         width: 20px;
         height: 20px;
         float: right;
         border-radius: 4px;
         cursor: pointer;
+        margin: 0 4px;
 
         .m-icon {
             width: 16px;
@@ -200,7 +231,7 @@ onMounted(() => loadTextList());
         }
 
         &:hover{
-            background-color: rgb(206, 230, 255);
+            background-color: var(--mi-hover);
         }
     }
 }
@@ -219,15 +250,15 @@ onMounted(() => loadTextList());
         margin: 0 4px;
         border-radius: 4px;
         height: 36px;
-        color: #494e59;
+        color: var(--mi-color);
         transition: all .2s;
         cursor: pointer;
 
         &:hover,&.renameing{
-            background-color: rgb(206, 230, 255);
+            background-color: var(--mi-hover);
         }
         &.active{
-            background-color: rgb(118, 187, 255);
+            background-color: var(--mi-active);
             color:#fff;
         }
 
@@ -248,19 +279,5 @@ onMounted(() => loadTextList());
             padding-right: .5em;
         }
     }
-}
-
-.text-list::-webkit-scrollbar {
-    background-color: transparent;
-    width: 5px;
-}
-
-.text-list::-webkit-scrollbar-thumb {
-    background-color: #8c95a9;
-    border-radius: 5px;
-}
-
-.text-list::-webkit-scrollbar-thumb:hover {
-    background-color: #494e59;
 }
 </style>

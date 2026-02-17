@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import bus from '../core/bus';
-import { isfullscreen, nowDiaryDate, showTab } from '../core/store';
+import { isfullscreen, nowDiaryDate, nowSpace, selectedId, showTab } from '../core/store';
 import type { MenuItem } from '../core/types';
-import { switchFull } from '../core/util';
+import { download, switchFull } from '../core/util';
 import Menu from '../util/Menu.vue';
 import MIcon from '../util/MIcon.vue';
 import dayjs from 'dayjs';
@@ -13,6 +13,34 @@ const editorControlsMenu:MenuItem[] = [{
     title:"保存",
     click:()=>{
         bus.emit("save"); // to emit in the editor
+    }
+},{
+    icon:"stat",
+    title:"统计",
+    click:()=>{
+        bus.emit("stat"); 
+    }
+},{
+    icon:"md",
+    title:"导出为.md",
+    click:()=>{
+        if(showTab.value==1){
+            NoteCore.getContent(selectedId.value).then(content=>{
+                NoteCore.getNoteMetas(nowSpace.value).then(metas=>{
+                    let meta=metas.find(m=>m.id==selectedId.value);
+                    if(meta){
+                        download(`${meta.title}.md`,content||"");
+                    }
+                })
+            }) 
+        }else if(showTab.value==3){
+            NoteCore.getDiary(nowDiaryDate.value).then(diary=>{
+                if(!diary)return;
+                NoteCore.getContent(NoteCore.getDiaryId(nowDiaryDate.value)).then(content=>{
+                    download(nowDiaryDate.value.format("YYYY-MM-DD")+" "+(diary.label||"")+".md",content||"");
+                })
+            })
+        }
     }
 }];
 const menubtn=ref<HTMLElement>();
@@ -25,7 +53,7 @@ const isDiaryNow = computed(() => {
     }
     return false;
 });
-let tot:number|undefined=void 0;
+let tot:any=void 0;
 bus.on("toast",(text:string,time=3000)=>{
     toastText.value=text;
     clearTimeout(tot);
@@ -90,11 +118,9 @@ defineEmits(["setting"]);
 .nav{
     width: 100%;
     height: 36px;
-    opacity: .3;
+    opacity: 1;
     transition: all .2s;
-    &:hover{
-        opacity: 1;
-    }
+    color:var(--mi-color);
     .nav-left{
         float: left;
         .nav-btn{
@@ -111,7 +137,7 @@ defineEmits(["setting"]);
         float: left;
         height:30px;
         line-height: 30px;
-        color: #aaa;
+        color: var(--mi-color);
         font-size: 14px;
         margin : 3px 10px;
     }
@@ -122,13 +148,14 @@ defineEmits(["setting"]);
         width: 36px;
         height: 36px;
         float: left;
+        transition:all .1s;
         .m-icon{
             width: 16px;
             height: 16px;
             margin: 10px;
         }
         &:hover{
-            background-color: #f4f4f4;
+            background-color: var(--mi-hover);
         }
         &.close:hover{
             background-color: red;

@@ -4,11 +4,44 @@
 *{
     margin: 0;
     padding: 0;
+    transition: background .3s;
 }
 
 body{
     font-family: 'Inter','Noto Sans SC','Noto Sans JP',sans-serif;
     background-color: #fff;
+}
+
+.app{
+    --mi-bg-0:#ffffff;
+    --mi-bg-0-1:#f9f9f9;
+    --mi-bg-0-2:#eee;
+    --mi-se-color-0:#ccc;
+    --mi-se-color-1:#bbb;
+    --mi-bg-1:rgb(228, 237, 255);
+    --mi-hover:rgb(206, 230, 255);
+    --mi-active:rgb(118, 187, 255);
+    --mi-color:#494e59;
+    --mi-color-label:#888;
+    --mi-scroll-0:#8c95a9;
+    --mi-scroll-1:#494e59;
+}
+
+.app.dark{
+    --mi-bg-0:#333;
+    --mi-bg-0-1:#444;
+    --mi-bg-0-2:#555;
+    --mi-se-color-0:#666;
+    --mi-se-color-1:#777;
+    --mi-bg-1:#222;
+    --mi-hover:rgb(0, 44, 90);
+    --mi-active:rgb(2, 88, 173);
+    --mi-color:#aab5ce;
+    --mi-color-label:#888;
+    --mi-scroll-0:#8c95a9;
+    --mi-scroll-1:#494e59;
+    color:#fff;
+    color-scheme:dark;
 }
 
 .milkdown {
@@ -39,9 +72,7 @@ body{
   --crepe-shadow-2:
     0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
 
-    p{
-        margin: .3em 0;
-    }
+    
     .ProseMirror blockquote{
         padding: .2em 0;
         padding-left: 40px;
@@ -49,11 +80,76 @@ body{
     }
     .ProseMirror{
         padding: 30px 120px;
+        >p{
+            margin: .3em 0;
+            font-size: 17px;
+            text-indent: 2em;
+            opacity: .9;
+        }
+        h1{
+            font-size: 40px;
+            font-weight: bold;
+        }
+        h2{
+            font-size: 30px;
+            font-weight: bold;
+        }
+        h3{
+            font-size: 24px;
+            font-weight: bold;
+        }
+        h4{
+            font-size: 20px;
+            font-weight: bold;
+        }
+        h5{
+            font-size: 18px;
+            font-weight: bold;
+        }
+        h6{
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .crepe-placeholder::before{
+            content:"请输入内容";
+            opacity: .5;
+            text-indent: 0em;
+        }
     }
     .milkdown-table-block {
         th,td{
             border:var(--crepe-color-outline) 1px solid;
         }
+    }
+}
+
+.dark .milkdown {
+  --crepe-color-background: #333;
+  --crepe-color-on-background: #f8f9ff;
+  --crepe-color-surface: #111418;
+  --crepe-color-surface-low: #191c20;
+  --crepe-color-on-surface: #e1e2e8;
+  --crepe-color-on-surface-variant: #c3c6cf;
+  --crepe-color-outline: #8d9199;
+  --crepe-color-primary: #a1c9fd;
+  --crepe-color-secondary: #3c4858;
+  --crepe-color-on-secondary: #d7e3f8;
+  --crepe-color-inverse: #e1e2e8;
+  --crepe-color-on-inverse: #2e3135;
+  --crepe-color-inline-code: #ffb4ab;
+  --crepe-color-error: #ffb4ab;
+  --crepe-color-hover: #1d2024;
+  --crepe-color-selected: #666;
+  --crepe-color-inline-area: #111418;
+  --crepe-shadow-1:
+    0px 1px 2px 0px rgba(255, 255, 255, 0.3),
+    0px 1px 3px 1px rgba(255, 255, 255, 0.15);
+  --crepe-shadow-2:
+    0px 1px 2px 0px rgba(255, 255, 255, 0.3),
+    0px 2px 6px 2px rgba(255, 255, 255, 0.15);
+
+    .ProseMirror blockquote{
+        color: #aaa;
     }
 }
 
@@ -70,3 +166,23 @@ body{
 }
 
 .ͼ3.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {background: #aaa;}
+
+::-webkit-scrollbar {
+    background-color: transparent;
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--mi-scroll-0);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--mi-scroll-1);
+}
+
+.prosemirror-virtual-cursor{
+    // transition:top .1s,left .1s,height .2s;
+    border-color: var(--mi-active)!important;
+    box-shadow: 0 0 2px var(--mi-active);
+}

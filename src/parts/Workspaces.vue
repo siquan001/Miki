@@ -154,7 +154,7 @@ onMounted(loadSpaces);
     .ws-header {
         margin-bottom: 15px;
         font-weight: bold;
-        color: #494e59;
+        color: var(--mi-color);
         height: 40px;
         line-height: 40px;
         .m-icon{
@@ -164,7 +164,7 @@ onMounted(loadSpaces);
             float: right;
             cursor: pointer;
             &:hover {
-                color: #409eff;
+                color: var(--mi-active);
             }
         }
         span{
@@ -182,7 +182,7 @@ onMounted(loadSpaces);
             align-items: center;
             padding: 10px 15px;
             margin-bottom: 8px;
-            background: #fff;
+            background: var(--mi-bg-0);
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s;
@@ -191,12 +191,12 @@ onMounted(loadSpaces);
                 height: 30px;
             }
             &:hover {
-                background: #f0f4ff;
+                background: var(--mi-hover);
             }
 
             &.active {
-                background: #d0e0ff;
-                border: 1px solid #a0c0ff;
+                background: var(--mi-active);
+                color:#fff;
             }
 
             .name {
@@ -251,7 +251,7 @@ onMounted(loadSpaces);
     }
 
     .a-content {
-        background-color: rgb(228, 237, 255);
+        background-color: var(--mi-bg-1);
         width: 600px;
         height: 400px;
         position: absolute;
@@ -261,6 +261,7 @@ onMounted(loadSpaces);
         transition: transform .3s;
         z-index: 2;
         border-radius: 10px;
+        box-shadow: #888 0 0 5px;
     }
 }
 </style>

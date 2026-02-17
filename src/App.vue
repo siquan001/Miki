@@ -1,4 +1,5 @@
 <template>
+    <div class="app" :class="[mode]">
     <div class="app-left" :style="{ width: leftWidth + 'px' }">
         <Logo @click="selectedId='';showTab=0" />
 
@@ -14,9 +15,8 @@
             <div class="tab initial" :style="{ display: showTab == 0 ? 'flex' : 'none' }">
                 <Logo />
                 <ul class="initlist">
-                    <ListItem icon="help" title="帮助" />
-                    <ListItem icon="add" title="新建文档" />
-                    <ListItem icon="pencil" title="随便记记" />
+                    <ListItem icon="help" title="帮助" @click="contentId='help';showTab=4"/>
+                    <ListItem icon="about" title="关于" @click="contentId='about';showTab=4"/>
                 </ul>
             </div>
             <div class="tab ap-editor" :style="{ display: showTab == 1 ? 'block' : 'none' }">
@@ -30,10 +30,16 @@
             <div class="tab ap-diary" :style="{ display: showTab == 3 ? 'block' : 'none' }">
                 <Diary v-if="showTab==3"/>
             </div>
+            <div class="tab ap-readeditor" :style="{ display: showTab == 4 ? 'block' : 'none' }">
+                <MilkdownProvider>
+                    <ReadEditor :key="contentId" :content="readonlyContent"/>
+                </MilkdownProvider>
+            </div>
         </div>
     </div>
     <Workspaces v-model:show="showWork" v-model:model-value="nowSpace"/>
     <div class="co"></div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -46,9 +52,10 @@ import Editor from './parts/Editor.vue';
 import { onMounted, ref } from 'vue';
 import Setting from './parts/Setting.vue';
 import bus from './core/bus';
-import { nowSpace, selectedId, showTab, showWork } from './core/store';
+import { nowSpace, selectedId, showTab, showWork,mode, contentId, readonlyContent } from './core/store';
 import Workspaces from './parts/Workspaces.vue';
 import Diary from './parts/Diary.vue';
+import ReadEditor from './parts/ReadEditor.vue';
 
 let stolw = localStorage.getItem('kd');
 const leftWidth = ref(stolw ? parseFloat(stolw) : 300); // 新增：控制左侧宽度
@@ -96,10 +103,14 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+.app{
+    width:100%;
+    height:100%;
+}
 .app-left {
     width: 300px;
     height: 100vh;
-    background-color: rgb(228, 237, 255);
+    background-color: var(--mi-bg-1);
     position: absolute;
     top: 0;
     left: 0;
@@ -126,7 +137,7 @@ onMounted(() => {
     position: absolute;
     top: 0;
     right: 0;
-    background-color: #fff;
+    background-color: var(--mi-bg-0);
     overflow: hidden;
 
     .app-tabs {
@@ -144,7 +155,7 @@ onMounted(() => {
 
                 .logo {
                     font-size: 80px;
-                    color: #ccc;
+                    color: var(--mi-se-color-0);
                 }
 
                 .initlist {
@@ -154,11 +165,11 @@ onMounted(() => {
 
                     .nav-list-item {
                         margin: 5px 0;
-                        color: #bbb;
-                        background-color: #f9f9f9;
+                        color: var(--mi-se-color-1);
+                        background-color: var(--mi-bg-0-1);
 
                         &:hover {
-                            background-color: #eee;
+                            background-color: var(--mi-bg-0-2);
                         }
                     }
                 }
@@ -168,14 +179,20 @@ onMounted(() => {
     }
 }
 
-.co {
+.co{
     width: 100%;
     height: 100vh;
     position: fixed;
     top: 0;
     left: 0;
-    /*background-color: #000;*/
-    opacity: .04;
+    background-color: #ff00003b;
+    opacity: 0;
+    transition:all .3s;
     pointer-events: none;
+    z-index:999;
+}
+
+.eye .co {
+    opacity: .3;
 }
 </style>

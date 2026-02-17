@@ -29,6 +29,7 @@
           <VCalendar
             transparent
             borderless
+            :is-dark="mode=='dark'"
             expanded
             :attributes="calendarAttributes"
             @dayclick="onDayClick"
@@ -42,7 +43,7 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue';
 import { NoteCore, type DiaryMeta } from '../core';
-import { nowDiaryDate } from '../core/store';
+import { nowDiaryDate,mode } from '../core/store';
 import dayjs, { Dayjs } from 'dayjs';
 import MIcon from '../util/MIcon.vue';
 
@@ -125,7 +126,7 @@ const writeToday = () => {
       line-height: 30px;
       float: left;
       &.active {
-        color: rgb(118, 187, 255);
+        color: var(--mi-active);
         font-weight: bold;
       }
     }
@@ -137,20 +138,20 @@ const writeToday = () => {
         float: right;
         cursor: pointer;
         &:hover {
-            color: #409eff;
+            color: var(--mi-active);
         }
     }
 
   .write-today-btn {
     float: right;
-    background: rgb(118, 187, 255);
+    background: var(--mi-active);
     color: white;
     border: none;
     padding: 6px 12px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 13px;
-    &:hover { background: rgb(98, 176, 255); }
+    &:hover { opacity: .8 }
   }
 }
 .calendar-container{
@@ -165,19 +166,19 @@ const writeToday = () => {
       margin: 5px 0;
       border-radius: 8px;
       cursor: pointer;
-      background-color: #eef6fd;
+      background-color: var(--mi-bg-0);
       overflow:hidden;
-      &:hover { background: #f8fafc; }
+      &:hover { background: var(--mi-hover); }
 
       .item-date {
         font-size: 15px;
-        color: #1e293b;
+        color: var(--mi-color);
         font-weight: bold;
         float: left;
       }
       .item-label {
         font-size: 15px;
-        color: #1e293b;
+        color: var(--mi-color);
         float: right;
       }
     }

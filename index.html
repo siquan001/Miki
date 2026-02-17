@@ -1,13 +1,56 @@
 <!doctype html>
 <html lang="zh-cn">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Miki</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+</head>
+
+<body>
+    <div id="app">
+        <div class="loading-f">
+            <div class="loading-p">
+                <div class="g"></div>
+            </div>
+        </div>
+
+        <style>
+.loading-f {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background-color: #fff;
+    transition: opacity .1s;
+}
+.loading-p {
+    width: 100px;
+    height: 2px;
+    position: absolute;
+    top: calc(50% - 1px);
+    left: calc(50% - 50px);
+    overflow: hidden;
+}
+.loading-p .g {
+    width: 100px;
+    height: 2px;
+    background-color: #000;
+    animation: t-l 1s linear infinite;
+}
+@keyframes t-l {
+    0% {
+        margin-left: -100px;
+    }
+    100% {
+        margin-left: 200px;
+    }
+}
+        </style>
+    </div>
+    <script type="module" src="./src/main.ts"></script>
+</body>
+
 </html>

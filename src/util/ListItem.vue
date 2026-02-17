@@ -30,7 +30,7 @@ const props=defineProps({
     margin: 10px;
     border-radius: 5px;
     height: 40px;
-    color: #494e59;
+    color: var(--mi-color);
     transition: all .2s;
     .m-icon{
         width: 16px;
@@ -47,10 +47,10 @@ const props=defineProps({
         width: calc(100% - 40px);
     }
     &:hover{
-        background-color: rgb(206, 230, 255);
+        background-color: var(--mi-hover);
     }
     &.active{
-        background-color: rgb(118, 187, 255);
+        background-color: var(--mi-active);
         color:#fff;
     }
 }

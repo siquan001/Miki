@@ -49,12 +49,13 @@ onUnmounted(() => {
     user-select: none;
     border-radius: 5px;
     overflow: hidden;
-    background-color: #fff;
-    box-shadow: #aaa 0 1px 5px;
+    background-color: var(--mi-bg-1);
+    box-shadow: var(--mi-bg-0-2) 0 1px 5px;
     display: grid;
     grid-template-rows: 0fr;
     transition: all 0.15s ease;
     overflow: hidden;
+    color:var(--mi-color);
 
     &.show {
         grid-template-rows: 1fr;
@@ -73,7 +74,7 @@ onUnmounted(() => {
         border-radius: 4px;
 
         &:hover {
-            background-color: #f5f5f5;
+            background-color: var(--mi-hover);
         }
 
         .menu-icon {
