@@ -44,7 +44,7 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue';
 import { NoteCore, type DiaryMeta } from '../core';
-import { nowDiaryDate,mode, $t, lang } from '../core/store';
+import { nowDiaryDate,mode, $t, lang, theme } from '../core/store';
 import dayjs, { Dayjs } from 'dayjs';
 import MIcon from '../util/MIcon.vue';
 
@@ -77,7 +77,7 @@ onMounted(async () => {
 const calendarAttributes = computed(() => {
   return processedDiaries.value.map(item => ({
     key: item.id,
-    highlight: 'blue',
+    highlight: theme.value.replace("default",'blue'),
     dates: item.date.toDate(),
     popover: {
       label: item.label,

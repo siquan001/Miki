@@ -4,6 +4,7 @@ import SettingItem from './SettingItem.vue';
 import { $t, contentId, lang, mode, showTab, theme } from '../core/store';
 import { exportAlltoLocal, exportAlltoMikiBase, importFromMikiBase } from '../core/export';
 import bus from '../core/bus';
+import Warn from '../util/Warn.vue';
 
 function ep(){
     exportAlltoLocal((stat,msg)=>{
@@ -59,6 +60,9 @@ function im(){
                 { label: '日本語', value: 'ja' },
             ]" v-model="lang"/>
         </SettingItem>
+        <Warn v-if="lang!='zh-cn'">
+            当前翻译为Gemini机翻，我们需要更加优质的翻译，若您有能力，可在<a href="https://github.com/siquan001/miki/">Github仓库</a>帮助我们<br>Currently, the translation is Gemini machine translation, we need better translations, if you have the ability, you can help us in the <a href="https://github.com/siquan001/miki/">Github repository</a>
+        </Warn>
         <SettingItem :title="$t('settings.theme_color')" :desc="$t('settings.theme_color_desc')">
             <SelectDown :options="[
                 { label: $t('settings.theme_color_default'), value: 'default' },
