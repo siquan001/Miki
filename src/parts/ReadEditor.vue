@@ -8,8 +8,9 @@
 import { Milkdown, useEditor } from "@milkdown/vue";
 import "@milkdown/crepe/theme/common/style.css";
 import { Crepe } from "@milkdown/crepe";
-import { clouds } from "thememirror";
+import { clouds, coolGlow } from "thememirror";
 import { onBeforeUnmount } from "vue";
+import { mode } from "../core/store";
 const props=defineProps({
     content:{
         type:String,
@@ -22,63 +23,7 @@ useEditor((root) => {
         defaultValue: props.content,
         featureConfigs: {
             "code-mirror": {
-                theme: clouds,
-            },
-            "block-edit": {
-                blockHandle: {
-                    getPlacement: () => 'left-start',
-                },
-                textGroup: {
-                    label: '文本块',
-                    text: {
-                        label: '文字',
-                    },
-                    h1: {
-                        label: '标题 1',
-                    },
-                    h2: {
-                        label: '标题 2',
-                    },
-                    h3: {
-                        label: '标题 3',
-                    },
-                    h4:null,
-                    h5: null,
-                    h6: null,
-                    quote: {
-                        label: '引用',
-                    },
-                    divider:{
-                        label: "分割线"
-                    }
-                },
-                listGroup: {
-                    label: '列表',
-                    bulletList: {
-                        label: '无序列表',
-                    },
-                    orderedList: {
-                        label: '有序列表',
-                    },
-                    taskList: {
-                        label: '任务列表',
-                    },
-                },
-                advancedGroup: {
-                    label: '高级',
-                    image: {
-                        label: '图片',
-                    },
-                    codeBlock: {
-                        label: '代码块',
-                    },
-                    table: {
-                        label: '表格',
-                    },
-                    math: {
-                        label: 'Latex公式',
-                    },
-                },
+                theme: mode.value=="dark"?coolGlow:clouds,
             }
         }
     })

@@ -1,6 +1,7 @@
 @import url(https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap);
 @import url(https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap);
 @import url(https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap);
+@import url(./colors.scss);
 *{
     margin: 0;
     padding: 0;
@@ -188,4 +189,8 @@ body{
     // transition:top .1s,left .1s,height .2s;
     border-color: var(--mi-active)!important;
     box-shadow: 0 0 2px var(--mi-active);
+}
+
+.float-clear{
+    clear: both;
 }

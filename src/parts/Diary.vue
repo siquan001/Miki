@@ -4,7 +4,7 @@ import { computed, ref, watch } from 'vue';
 import Editor from './Editor.vue';
 import { NoteCore,type DiaryMeta } from '../core';
 import { MilkdownProvider } from '@milkdown/vue';
-import { nowDiaryDate } from '../core/store';
+import { $t, nowDiaryDate } from '../core/store';
 import bus from '../core/bus';
 import DiaryPicker from './DiaryPicker.vue';
 const label = ref("");
@@ -29,7 +29,7 @@ async function lastDiary(){
             if(i<ds.length-1){
                 nowDiaryDate.value=NoteCore.getDiaryDate((ds[i+1] as DiaryMeta).id);
             }else{
-                bus.emit("toast","已经是第一篇日记了");
+                bus.emit("toast",$t("isfirstnow"));
             }
             break;
         }
@@ -67,9 +67,9 @@ bus.on("diary-updated",()=>{
 <template>
     <div class="diary-ed">
         <div class="diary-header">
-            <div class="date">{{ nowDiaryDate.format('YYYY年MM月DD日') }}</div>
+            <div class="date">{{ nowDiaryDate.format($t("date_format")) }}</div>
             <div class="label">
-                <input type="text" placeholder="今天心情如何？" v-model="label"/>
+                <input type="text" :placeholder="$t('howareyou')" v-model="label"/>
             </div>
         </div>
         <div class="diary-edit">

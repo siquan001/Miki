@@ -1,13 +1,13 @@
 <template>
     <div class="nav-top">
-        <div class="nav-label">{{ nowSpace == "def" ? "我的文稿" : nowSpaceDt.name }}</div>
+        <div class="nav-label">{{ nowSpace == "def" ? $t("mytexts") : nowSpaceDt.name }}</div>
         <div class="spaces" @click="showWork=true"><MIcon name="folder" /></div>
         <div class="upload-md" @click="upFileText()"><MIcon name="upload" /></div>
     </div>
     
     <ul class="text-list">
         <li @click="startCreating">
-            <div class="title"><MIcon name="add" /> 新建文稿</div>
+            <div class="title"><MIcon name="add" /> {{ $t("newdoc") }}</div>
         </li>
 
         <li v-if="isCreating" class="renameing">
@@ -37,7 +37,7 @@ import MIcon from '../util/MIcon.vue';
 import Menu from '../util/Menu.vue'; // 确保路径正确
 import { NoteCore, type TextMeta, type TextSpace } from '../core';
 import type { MenuItem } from '../core/types';
-import { nowSpace, selectedId, showTab, showWork } from '../core/store';
+import { $t, nowSpace, selectedId, showTab, showWork } from '../core/store';
 import bus from '../core/bus';
 import { upFileText } from '../core/export';
 import { download } from '../core/util';
@@ -73,17 +73,17 @@ const loadTextList = async () => {
 // 右键菜单内容
 const menuItems = computed<(MenuItem | undefined)[]>(() => [
     {
-        title: '重命名',
+        title: $t("rename"),
         icon: 'pencil',
         click: () => startRename()
     },
     {
-        title: '删除',
+        title: $t("delete"),
         icon: 'delete',
         click: () => handleDelete()
     },
     {
-        title: '导出为.md',
+        title: $t("exportmd"),
         icon: 'md',
         click: () => {
             if(currentActiveText.value){

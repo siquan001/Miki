@@ -3,7 +3,7 @@
         <div class="b-drop" @click="show=false"></div>
         <div class="a-content">
             <div class="ws-header">
-                <span>管理工作空间</span>
+                <span>{{ $t("manageworkspace") }}</span>
                 <MIcon name="close" @click="show=false" class="close-dialog-btn" />
                 <MIcon name="add" @click="startCreate" class="add-btn" title="新增工作区" />
             </div>
@@ -11,11 +11,11 @@
             <ul class="ws-list">
                 <li :class="{ 'ws-item': true, active: modelValue === 'def' }" @click="modelValue='def'" @contextmenu.prevent="">
                     <MIcon name="document" />
-                    <span class="name">我的文稿</span>
+                    <span class="name">{{ $t("mytexts") }}</span>
                 </li>
                 <li v-if="isCreating" class="ws-item editing">
                     <input :ref="(el) => { if (el) editInputRef = el as HTMLInputElement }" v-model="editTitle"
-                        @blur="confirmCreate" @keyup.enter="confirmCreate" placeholder="空间名称..." />
+                        @blur="confirmCreate" @keyup.enter="confirmCreate" :placeholder="$t('spacenaming')" />
                 </li>
                 <template v-for="space in spaces" :key="space.id">
                     <li v-if="space.id!== 'def'"
@@ -44,7 +44,7 @@ import { NoteCore, type TextSpace } from '../core';
 import Menu from '../util/Menu.vue';
 import MIcon from '../util/MIcon.vue';
 import bus from '../core/bus';
-import { nowSpace } from '../core/store';
+import { $t, nowSpace } from '../core/store';
 
 const show=defineModel("show",{
     default:false,
@@ -102,8 +102,8 @@ const onContextMenu = (e: MouseEvent, space: TextSpace) => {
 };
 
 const menuItems = computed(() => [
-    { title: '重命名', icon: 'pencil', click: () => startRename() },
-    { title: '删除空间', icon: 'delete', click: () => deleteSpace() }
+    { title: $t("rename"), icon: 'pencil', click: () => startRename() },
+    { title: $t("deletespace"), icon: 'delete', click: () => deleteSpace() }
 ]);
 
 const menuStyle = computed(() => ({
@@ -134,7 +134,7 @@ const confirmRename = async () => {
 
 const deleteSpace = async () => {
     if (!activeSpace.value) return;
-    if(!confirm(`确定要删除 "${activeSpace.value.name}" 吗？该操作不可恢复！`))return;
+    if(!confirm($t("confirmdeletespace").replace("$",activeSpace.value.name)))return;
     await NoteCore.deleteSpace(activeSpace.value.id);
     if (modelValue.value === activeSpace.value.id) {
         modelValue.value='def';

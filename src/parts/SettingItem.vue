@@ -7,6 +7,7 @@
         <div class="setting-right">
             <slot></slot>
         </div>
+        <div class="float-clear"></div>
     </div>
 </template>
 

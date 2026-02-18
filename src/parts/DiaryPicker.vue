@@ -4,11 +4,11 @@
     <div class="a-content">
       <header class="picker-header">
         <div class="tabs">
-          <span :class="{ active: viewMode === 'calendar' }" @click="viewMode = 'calendar'">日历视图</span>
-          <span :class="{ active: viewMode === 'list' }" @click="viewMode = 'list'">列表视图</span>
+          <span :class="{ active: viewMode === 'calendar' }" @click="viewMode = 'calendar'">{{ $t('datepicker') }}</span>
+          <span :class="{ active: viewMode === 'list' }" @click="viewMode = 'list'">{{ $t('listpicker') }}</span>
         </div>
         <MIcon name="close" @click="show=false" class="close-dialog-btn" />
-        <button class="write-today-btn" @click="writeToday">✍️ 写日记</button>
+        <button class="write-today-btn" @click="writeToday">{{ $t('writediary') }}</button>
       </header>
 
       <main class="picker-body">
@@ -22,7 +22,7 @@
             <span class="item-date">{{ item.date.format('YYYY-MM-DD') }}</span>
             <span class="item-label">{{ item.label }}</span>
           </div>
-          <div v-if="processedDiaries.length === 0" class="empty">暂时没有日记哦</div>
+          <div v-if="processedDiaries.length === 0" class="empty">{{ $t('nodiary') }}</div>
         </div>
 
         <div v-else class="calendar-container">
@@ -33,6 +33,7 @@
             expanded
             :attributes="calendarAttributes"
             @dayclick="onDayClick"
+            :locale="lang"
           />
         </div>
       </main>
@@ -43,7 +44,7 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue';
 import { NoteCore, type DiaryMeta } from '../core';
-import { nowDiaryDate,mode } from '../core/store';
+import { nowDiaryDate,mode, $t, lang } from '../core/store';
 import dayjs, { Dayjs } from 'dayjs';
 import MIcon from '../util/MIcon.vue';
 

@@ -1,10 +1,10 @@
 <template>
-    <div class="app" :class="[mode]">
+    <div class="app" :class="[mode,'co-'+theme]">
     <div class="app-left" :style="{ width: leftWidth + 'px' }">
         <Logo @click="selectedId='';showTab=0" />
 
-        <ListItem icon="diary" title="日记" :active="showTab==3" @click="selectedId='';showTab=3" />
-        <ListItem icon="text" title="随笔" />
+        <ListItem icon="diary" :title="$t('diary')" :active="showTab==3" @click="selectedId='';showTab=3" />
+        <ListItem icon="text" :title="$t('sbnote')" />
 
         <TextList @open="showTab = 1" />
     </div>
@@ -15,8 +15,8 @@
             <div class="tab initial" :style="{ display: showTab == 0 ? 'flex' : 'none' }">
                 <Logo />
                 <ul class="initlist">
-                    <ListItem icon="help" title="帮助" @click="contentId='help';showTab=4"/>
-                    <ListItem icon="about" title="关于" @click="contentId='about';showTab=4"/>
+                    <ListItem icon="help" :title="$t('help')" @click="contentId='help';showTab=4"/>
+                    <ListItem icon="about" :title="$t('about')" @click="contentId='about';showTab=4"/>
                 </ul>
             </div>
             <div class="tab ap-editor" :style="{ display: showTab == 1 ? 'block' : 'none' }">
@@ -52,7 +52,7 @@ import Editor from './parts/Editor.vue';
 import { onMounted, ref } from 'vue';
 import Setting from './parts/Setting.vue';
 import bus from './core/bus';
-import { nowSpace, selectedId, showTab, showWork,mode, contentId, readonlyContent } from './core/store';
+import { nowSpace, selectedId, showTab, showWork,mode, contentId, readonlyContent, theme, $t } from './core/store';
 import Workspaces from './parts/Workspaces.vue';
 import Diary from './parts/Diary.vue';
 import ReadEditor from './parts/ReadEditor.vue';

@@ -10,13 +10,14 @@ import "@milkdown/crepe/theme/common/style.css";
 import { Crepe } from "@milkdown/crepe";
 import { clouds } from "thememirror";
 import { onBeforeUnmount } from "vue";
-import { mode, nowSpace } from "../core/store";
+import { $t, lang, mode, nowSpace } from "../core/store";
 import { NoteCore } from "../core";
 import { switchFull } from "../core/util";
 import { replaceAll } from "@milkdown/kit/utils";
 import {coolGlow} from 'thememirror';
 import bus from "../core/bus";
 import dayjs from "dayjs";
+import langs from "../langs";
 function keydown(a:Crepe){
     return function(e:KeyboardEvent){
         if(e.ctrlKey){
@@ -58,9 +59,9 @@ async function save(a:Crepe,mode?:string){
         bus.emit("diary-updated",{id:tarId});
     } 
     if(mode=="auto"){
-        bus.emit("toast","自动保存 at "+dayjs().format('YYYY/MM/DD HH:mm:ss'));
+        bus.emit("toast",$t("autosave")+" at "+dayjs().format('YYYY/MM/DD HH:mm:ss'));
     }else{
-        bus.emit("toast","已保存 at "+dayjs().format('YYYY/MM/DD HH:mm:ss'));
+        bus.emit("toast",$t("saved")+" at "+dayjs().format('YYYY/MM/DD HH:mm:ss'));
     }
 }
 useEditor((root) => {
@@ -75,57 +76,7 @@ useEditor((root) => {
                 blockHandle: {
                     getPlacement: () => 'left-start',
                 },
-                textGroup: {
-                    label: '文本块',
-                    text: {
-                        label: '文字',
-                    },
-                    h1: {
-                        label: '标题 1',
-                    },
-                    h2: {
-                        label: '标题 2',
-                    },
-                    h3: {
-                        label: '标题 3',
-                    },
-                    h4:null,
-                    h5: null,
-                    h6: null,
-                    quote: {
-                        label: '引用',
-                    },
-                    divider:{
-                        label: "分割线"
-                    }
-                },
-                listGroup: {
-                    label: '列表',
-                    bulletList: {
-                        label: '无序列表',
-                    },
-                    orderedList: {
-                        label: '有序列表',
-                    },
-                    taskList: {
-                        label: '任务列表',
-                    },
-                },
-                advancedGroup: {
-                    label: '高级',
-                    image: {
-                        label: '图片',
-                    },
-                    codeBlock: {
-                        label: '代码块',
-                    },
-                    table: {
-                        label: '表格',
-                    },
-                    math: {
-                        label: 'Latex公式',
-                    },
-                },
+                ...langs[lang.value].editor
             }
         }
     })
@@ -137,14 +88,14 @@ useEditor((root) => {
         let kdf=keydown(a);
         let tosave=(mode?:string)=>save(a,mode);
         let tostat=()=>{
-            bus.emit("toast",`字数统计：${clearTxt(a.getMarkdown()).length}字`);
+            bus.emit("toast",$t("charstat")+`：${clearTxt(a.getMarkdown()).length}字`);
         };
         beforefn=async ()=>{
             document.removeEventListener("keydown",kdf);
             bus.off("save",tosave);
             bus.off("stat",tostat);
             await save(a);
-            bus.emit("toast","已自动保存上个文档");
+            bus.emit("toast",$t("autosavelast"));
             a.destroy();
         }
         document.addEventListener("keydown",kdf);
@@ -183,6 +134,7 @@ onBeforeUnmount(async ()=>{
         max-width: 1000px;
         width: calc(100% - 40px);
         margin: 0px auto;
+        background: transparent!important;
     }
 }
 

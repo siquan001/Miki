@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { $t } from '../core/store';
 
 interface Option {
     label: string
@@ -35,7 +36,7 @@ const props=defineProps<{
 const modelValue = defineModel<string | number>()
 const modelLabel = computed(() => {
     const selected = props.options.find(item => item.value === modelValue.value)
-    return selected ? selected.label : '请选择..'
+    return selected ? selected.label : $t("selecting")
 })
 const isOpen = ref(false)
 

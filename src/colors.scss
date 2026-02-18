@@ -1,0 +1,127 @@
+.app.co-pink {
+    --mi-bg-0:#ffffff;
+    --mi-bg-0-1:#fff9fa;
+    --mi-bg-0-2:#fceef0;
+    --mi-se-color-0:#ecd5d8;
+    --mi-se-color-1:#dbbfc3;
+    --mi-bg-1:rgb(255, 230, 235);
+    --mi-hover:rgb(255, 205, 215);
+    --mi-active:rgb(255, 120, 150);
+    --mi-color:#59494c;
+    --mi-color-label:#8f7a7d;
+    --mi-scroll-0:#a98c92;
+    --mi-scroll-1:#59494c;
+}
+
+.app.co-pink.dark {
+    --mi-bg-0:#332a2c;
+    --mi-bg-0-1:#44383a;
+    --mi-bg-0-2:#554649;
+    --mi-se-color-0:#665457;
+    --mi-se-color-1:#776266;
+    --mi-bg-1:#2d1f22;
+    --mi-hover:rgb(90, 0, 30);
+    --mi-active:rgb(173, 2, 60);
+    --mi-color:#ceaabb;
+    --mi-color-label:#888;
+    --mi-scroll-0:#a98c92;
+    --mi-scroll-1:#59494c;
+    color:#fff;
+    color-scheme:dark;
+}
+
+.app.co-orange {
+    --mi-bg-0:#ffffff;
+    --mi-bg-0-1:#fffaf5;
+    --mi-bg-0-2:#fcf2e8;
+    --mi-se-color-0:#ecdccb;
+    --mi-se-color-1:#dbcab8;
+    --mi-bg-1:rgb(255, 242, 225);
+    --mi-hover:rgb(255, 230, 195);
+    --mi-active:rgb(255, 170, 70);
+    --mi-color:#595249;
+    --mi-color-label:#8f847a;
+    --mi-scroll-0:#a99b8c;
+    --mi-scroll-1:#595249;
+}
+
+.app.co-orange.dark {
+    --mi-bg-0:#33302a;
+    --mi-bg-0-1:#444038;
+    --mi-bg-0-2:#555046;
+    --mi-se-color-0:#666054;
+    --mi-se-color-1:#777062;
+    --mi-bg-1:#2d291f;
+    --mi-hover:rgb(90, 45, 0);
+    --mi-active:rgb(173, 85, 2);
+    --mi-color:#cebfab;
+    --mi-color-label:#888;
+    --mi-scroll-0:#a99b8c;
+    --mi-scroll-1:#595249;
+    color:#fff;
+    color-scheme:dark;
+}
+
+.app.co-green {
+    --mi-bg-0:#ffffff;
+    --mi-bg-0-1:#f7faf7;
+    --mi-bg-0-2:#eefce1;
+    --mi-se-color-0:#d5ecd5;
+    --mi-se-color-1:#bfdbbf;
+    --mi-bg-1:rgb(230, 255, 230);
+    --mi-hover:rgb(205, 255, 205);
+    --mi-active:rgb(100, 210, 100);
+    --mi-color:#49594d;
+    --mi-color-label:#7a8f7e;
+    --mi-scroll-0:#8ca991;
+    --mi-scroll-1:#49594d;
+}
+
+.app.co-green.dark {
+    --mi-bg-0:#2a332c;
+    --mi-bg-0-1:#38443b;
+    --mi-bg-0-2:#46554a;
+    --mi-se-color-0:#546659;
+    --mi-se-color-1:#627768;
+    --mi-bg-1:#1f2d22;
+    --mi-hover:rgb(0, 70, 20);
+    --mi-active:rgb(2, 140, 50);
+    --mi-color:#abceb3;
+    --mi-color-label:#888;
+    --mi-scroll-0:#8ca991;
+    --mi-scroll-1:#49594d;
+    color:#fff;
+    color-scheme:dark;
+}
+
+.app.co-purple {
+    --mi-bg-0:#ffffff;
+    --mi-bg-0-1:#faf9ff;
+    --mi-bg-0-2:#f4effc;
+    --mi-se-color-0:#ded5ec;
+    --mi-se-color-1:#c9bfdb;
+    --mi-bg-1:rgb(240, 230, 255);
+    --mi-hover:rgb(225, 205, 255);
+    --mi-active:rgb(160, 110, 255);
+    --mi-color:#504959;
+    --mi-color-label:#817a8f;
+    --mi-scroll-0:#958ca9;
+    --mi-scroll-1:#504959;
+}
+
+.app.co-purple.dark {
+    --mi-bg-0:#2f2a33;
+    --mi-bg-0-1:#3f3844;
+    --mi-bg-0-2:#4f4655;
+    --mi-se-color-0:#5f5466;
+    --mi-se-color-1:#6f6277;
+    --mi-bg-1:#251f2d;
+    --mi-hover:rgb(40, 0, 90);
+    --mi-active:rgb(100, 2, 173);
+    --mi-color:#c4abce;
+    --mi-color-label:#888;
+    --mi-scroll-0:#958ca9;
+    --mi-scroll-1:#504959;
+    color:#fff;
+    color-scheme:dark;
+}
