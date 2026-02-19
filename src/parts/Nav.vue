@@ -86,6 +86,9 @@ defineEmits(["setting"]);
             <div class="nav-btn" @click.stop="showEditorMenu = true" ref="menubtn" v-if="showTab == 1 || showTab == 3">
                 <MIcon name="menu" />
             </div>
+            <div class="nav-btn" @click="bus.emit('ai-assist')" v-if="showTab == 1 || showTab == 3">
+                <MIcon name="ai" />
+            </div>
             <div class="nav-btn" @click="bus.emit('diary-last')" v-if="showTab == 3">
                 <MIcon name="chleft" />
             </div>

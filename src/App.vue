@@ -4,7 +4,7 @@
         <Logo @click="selectedId='';showTab=0" />
 
         <ListItem icon="diary" :title="$t('diary')" :active="showTab==3" @click="selectedId='';showTab=3" />
-        <ListItem icon="text" :title="$t('sbnote')" />
+        <!-- <ListItem icon="text" :title="$t('sbnote')" /> -->
 
         <TextList @open="showTab = 1" />
     </div>
