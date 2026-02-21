@@ -5,6 +5,8 @@ import { $t, contentId, lang, mode, showTab, theme } from '../core/store';
 import { exportAlltoLocal, exportAlltoMikiBase, importFromMikiBase } from '../core/export';
 import bus from '../core/bus';
 import Warn from '../util/Warn.vue';
+import CSSManager from './CSSManager.vue';
+import { ref } from 'vue';
 
 function ep(){
     exportAlltoLocal((stat,msg)=>{
@@ -40,6 +42,8 @@ function im(){
         }
     })
 }
+
+const showcm=ref(false);
 </script>
 
 <template>
@@ -72,6 +76,9 @@ function im(){
                 { label: $t('settings.theme_color_purple'), value: 'purple' },
             ]" v-model="theme"/>
         </SettingItem>
+        <SettingItem title="自定义界面样式" desc="添加自定义的CSS文件以自定义页面显示效果">
+            <div class="btn" @click="showcm=true">管理CSS</div>
+        </SettingItem>
         <SettingItem :title="$t('settings.backup')" :desc="$t('settings.backup_desc')">
             <div class="btn" @click="em()">{{ $t('settings.bkp') }}</div>
         </SettingItem>
@@ -88,15 +95,16 @@ function im(){
             <div class="btn" @click="contentId='about';showTab=4">{{ $t('settings.see') }}</div>
         </SettingItem>
     </div>
+
+    <CSSManager v-model:show="showcm"/>
 </template>
 
 <style lang="scss">
 .se-con {
     max-width: 800px;
     width: calc(100% - 40px);
-    margin: 0 auto;
-    padding: 20px;
-    height:100%;
+    padding: 20px max(20px,calc(50% - 400px));
+    height:calc(100% - 40px);
     overflow-y: auto;
 }
 

@@ -58,31 +58,25 @@ import Diary from './parts/Diary.vue';
 import ReadEditor from './parts/ReadEditor.vue';
 
 let stolw = localStorage.getItem('kd');
-const leftWidth = ref(stolw ? parseFloat(stolw) : 300); // 新增：控制左侧宽度
+const leftWidth = ref(stolw ? parseFloat(stolw) : 300);
 
 const startResize = (e: MouseEvent) => {
-    // 阻止默认行为和选择文字
     e.preventDefault();
 
-    const startX = e.clientX;
-    const startWidth = leftWidth.value;
+    const sx = e.clientX;
+    const sw = leftWidth.value;
 
-    const onMouseMove = (moveEvent: MouseEvent) => {
-        // 计算新宽度，可以根据需要设置 min/max 限制
-        const newWidth = startWidth + (moveEvent.clientX - startX);
-        if (leftWidth.value == 0) {
-            if (newWidth > 100) {
-                leftWidth.value = 200;
-            }
-        } else {
-            if (newWidth < 100) {
-                leftWidth.value = 0;
-            } else
-                if (newWidth > 200 && newWidth < window.innerWidth * 0.5) { // 限制拖动范围
-                    leftWidth.value = newWidth;
-                }
+    const onMouseMove = (e2: MouseEvent) => {
+        const newWidth = sw + (e2.clientX - sx);
+        if(newWidth<50){
+            leftWidth.value = 0;
+        }else if(newWidth<200){
+            leftWidth.value = 200;
+        }else if(newWidth > window.innerWidth * 0.5){
+            leftWidth.value=window.innerWidth * 0.5;
+        }else{
+            leftWidth.value=newWidth;
         }
-
     };
 
     const onMouseUp = () => {
@@ -99,6 +93,12 @@ onMounted(() => {
     document.addEventListener("click", () => {
         bus.emit("doc-click");
     })
+    window.addEventListener('resize',() => {
+        if(leftWidth.value>window.innerWidth*0.5){
+            leftWidth.value=window.innerWidth*0.5;
+        }
+    })
+    // because App just use onetime,I think unmounted is useless
 })
 </script>
 

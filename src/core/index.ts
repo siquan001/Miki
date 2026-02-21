@@ -1,10 +1,8 @@
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import localforage from "localforage";
+import { getHash } from "./util";
 
-function getHash() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2);
-}
 // 笔记元数据：轻量，用于列表展示
 export interface TextMeta {
     id: string;

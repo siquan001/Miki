@@ -13,7 +13,7 @@ export function download(name:string,content:string){
     a.click();
 }
 
-export function pickFile(accept?:string){
+export function pickFile(accept?:string):Promise<File>{
     return new Promise<File>((res,rej)=>{
         const input=document.createElement("input");
         input.type="file";
@@ -29,4 +29,8 @@ export function pickFile(accept?:string){
         }
         input.click();
     });
+}
+
+export function getHash(){
+    return Date.now().toString(36) + Math.random().toString(36).slice(2);
 }

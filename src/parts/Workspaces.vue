@@ -221,47 +221,5 @@ onMounted(loadSpaces);
     }
 }
 
-.app-dialog {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2;
-    opacity:0;
-    pointer-events:none;
-    transition: opacity .3s;
-    &.show{
-        opacity:1;
-        pointer-events:all;
-        .a-content{
-            transform: translate(-50%, -50%);
-        }
-    }
 
-    .b-drop {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1;
-        background-color: #000;
-        opacity: .3;
-    }
-
-    .a-content {
-        background-color: var(--mi-bg-1);
-        width: 600px;
-        height: 400px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(.6);
-        transition: transform .3s;
-        z-index: 2;
-        border-radius: 10px;
-        box-shadow: #888 0 0 5px;
-    }
-}
 </style>
