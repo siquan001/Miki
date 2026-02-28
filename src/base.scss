@@ -191,6 +191,10 @@ body{
     box-shadow: 0 0 2px var(--mi-active);
 }
 
+.dark .prosemirror-virtual-cursor{
+    border-color: #fff!important;
+}
+
 .float-clear{
     clear: both;
 }
